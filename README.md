@@ -1,2 +1,2 @@
-# gormx
-gorm扩展
+# interact
+终端交互
