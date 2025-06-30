@@ -5,7 +5,6 @@ import (
 	"strings"
 
 	"github.com/go-xuan/typex"
-
 	"github.com/manifoldco/promptui"
 )
 
@@ -21,7 +20,7 @@ func Input(label string) (typex.Value, error) {
 		},
 	}
 	if input, err := prompt.Run(); err != nil {
-		return nil, err
+		return typex.ZeroValue(), err
 	} else {
 		return typex.StringValue(strings.TrimSpace(input)), nil
 	}

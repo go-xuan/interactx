@@ -2,9 +2,11 @@ package promptx
 
 import (
 	"errors"
+
 	"github.com/manifoldco/promptui"
 )
 
+// Option 选项
 type Option interface {
 	Active() string
 	Inactive() string
@@ -12,6 +14,7 @@ type Option interface {
 	Details() string
 }
 
+// Select 自定义选项
 func Select[OPT Option](label string, opts []OPT) (OPT, error) {
 	var opt OPT
 	if len(opts) == 0 {
@@ -22,7 +25,7 @@ func Select[OPT Option](label string, opts []OPT) (OPT, error) {
 		Label: label,
 		Items: opts,
 		Templates: &promptui.SelectTemplates{
-			Label:    "---------- {{ .| red }} ----------",
+			Label:    "---------- {{ . | red }} ----------",
 			Active:   opt.Active(),
 			Inactive: opt.Inactive(),
 			Selected: opt.Selected(),
@@ -37,12 +40,13 @@ func Select[OPT Option](label string, opts []OPT) (OPT, error) {
 	}
 }
 
+// SelectString 选择字符串
 func SelectString(label string, opts []string) (string, error) {
 	prompt := promptui.Select{
 		Label: label,
 		Items: opts,
 		Templates: &promptui.SelectTemplates{
-			Label:    "---------- {{ .| red }} ----------",
+			Label:    "---------- {{ . | red }} ----------",
 			Active:   "* {{ . | cyan }}",
 			Inactive: " {{ . | white }}",
 			Selected: "* {{. | red | faint }}",
@@ -53,5 +57,26 @@ func SelectString(label string, opts []string) (string, error) {
 		return "", err
 	} else {
 		return opts[index], nil
+	}
+}
+
+// SelectBool 选择布尔值
+func SelectBool(label string) (bool, error) {
+	opts := []string{"true", "false"}
+	prompt := promptui.Select{
+		Label: label,
+		Items: opts,
+		Templates: &promptui.SelectTemplates{
+			Label:    "---------- {{ . | red }} ----------",
+			Active:   "* {{ . | cyan }}",
+			Inactive: " {{ . | white }}",
+			Selected: "* {{. | red | faint }}",
+		},
+		Size: 2,
+	}
+	if index, _, err := prompt.Run(); err != nil {
+		return false, err
+	} else {
+		return opts[index] == "true", nil
 	}
 }

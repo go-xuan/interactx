@@ -1,5 +1,6 @@
 package promptx
 
+// String 字符串选项
 type String struct {
 	Name        string
 	Description string

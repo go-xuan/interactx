@@ -4,10 +4,10 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-	"github.com/go-xuan/interactx/colorx"
 	"os"
 	"strings"
 
+	"github.com/go-xuan/interactx/colorx"
 	"github.com/go-xuan/typex"
 )
 
@@ -137,10 +137,7 @@ func (c *Command) execute() error {
 		name := strings.ToLower(args[0])
 		if sub, ok := c.subMap[name]; ok {
 			sub.args = args[1:]
-			if err := sub.execute(); err != nil {
-				return errors.New("执行命令失败：" + err.Error())
-			}
-			return nil
+			return sub.execute()
 		}
 	}
 
