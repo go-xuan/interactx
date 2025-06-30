@@ -1,7 +1,6 @@
 package promptx
 
 import (
-	"errors"
 	"strings"
 
 	"github.com/go-xuan/typex"
@@ -9,19 +8,16 @@ import (
 )
 
 // Input 获取用户输入的自定义命令
-func Input(label string) (typex.Value, error) {
+func Input(label string) typex.Value {
 	prompt := promptui.Prompt{
 		Label: label,
 		Validate: func(s string) error {
-			if strings.TrimSpace(s) == "" {
-				return errors.New("invalid input")
-			}
 			return nil
 		},
 	}
 	if input, err := prompt.Run(); err != nil {
-		return typex.ZeroValue(), err
+		return typex.ZeroValue()
 	} else {
-		return typex.StringValue(strings.TrimSpace(input)), nil
+		return typex.StringValue(strings.TrimSpace(input))
 	}
 }
