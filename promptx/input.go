@@ -1,6 +1,7 @@
 package promptx
 
 import (
+	"errors"
 	"strings"
 
 	"github.com/go-xuan/typex"
@@ -12,6 +13,9 @@ func Input(label string) typex.Value {
 	prompt := promptui.Prompt{
 		Label: label,
 		Validate: func(s string) error {
+			if strings.TrimSpace(s) == "" {
+				return errors.New("empty input")
+			}
 			return nil
 		},
 	}
