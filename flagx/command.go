@@ -7,8 +7,9 @@ import (
 	"os"
 	"strings"
 
-	"github.com/go-xuan/interactx/colorx"
 	"github.com/go-xuan/typex"
+
+	"github.com/go-xuan/interactx/colorx"
 )
 
 // Main 根命令
@@ -76,11 +77,11 @@ func (c *Command) Join(command *Command) *Command {
 // AddOption 添加参数
 func (c *Command) AddOption(options ...Option) *Command {
 	for _, option := range options {
-		if optName := option.Name(); optName != "" {
-			if _, ok := c.optionMap[optName]; !ok {
-				c.options = append(c.options, optName)
+		if name := option.Name(); name != "" {
+			if _, ok := c.optionMap[name]; !ok {
+				c.options = append(c.options, name)
 			}
-			c.optionMap[optName] = option
+			c.optionMap[name] = option
 		}
 	}
 	return c
@@ -169,11 +170,11 @@ func (c *Command) Name() string {
 // ParseArgs 解析参数值到选项中
 func (c *Command) ParseArgs() error {
 	fs := c.FlagSet()
-	// 设置选项参数值
+	// 绑定参数到FlagSet
 	for _, option := range c.optionMap {
 		option.Set(fs)
 	}
-	// 解析参数值
+	// 解析FlagSet
 	if err := fs.Parse(c.args); err != nil {
 		return errors.New("FlagSet解析失败：" + err.Error())
 	}

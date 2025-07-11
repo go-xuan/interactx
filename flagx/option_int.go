@@ -22,25 +22,25 @@ type intOption struct {
 	def   int
 }
 
-func (opt *intOption) Name() string {
-	return opt.name
+func (o *intOption) Name() string {
+	return o.baseOption.Name()
 }
 
-func (opt *intOption) Usage() string {
-	if opt.def != 0 {
-		return genUsage(opt.usage, opt.def)
+func (o *intOption) Usage() string {
+	if o.def != 0 {
+		return genUsage(o.usage, o.def)
 	} else {
-		return opt.usage
+		return o.usage
 	}
 }
 
-func (opt *intOption) Set(fs *flag.FlagSet) {
-	if opt.value == nil {
-		opt.value = fs.Int(opt.name, opt.def, opt.usage)
+func (o *intOption) Set(fs *flag.FlagSet) {
+	if o.value == nil {
+		o.value = fs.Int(o.name, o.def, o.usage)
 	}
 }
-func (opt *intOption) Get() typex.Value {
-	if value := opt.value; value != nil {
+func (o *intOption) Get() typex.Value {
+	if value := o.value; value != nil {
 		return typex.IntValue(*value)
 	}
 	return typex.ZeroValue()

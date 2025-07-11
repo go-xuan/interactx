@@ -6,7 +6,7 @@ import (
 )
 
 func TestCommand(t *testing.T) {
-	command := NewCommand("test", "测试")
+	var command = NewCommand("test", "测试")
 	command.AddOption(
 		IntOption("size", "数量", 0),
 	)

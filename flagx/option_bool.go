@@ -22,26 +22,26 @@ type boolOption struct {
 	def   bool
 }
 
-func (opt *boolOption) Name() string {
-	return opt.name
+func (o *boolOption) Name() string {
+	return o.baseOption.Name()
 }
 
-func (opt *boolOption) Usage() string {
-	if opt.def {
-		return genUsage(opt.usage, opt.def)
+func (o *boolOption) Usage() string {
+	if o.def {
+		return genUsage(o.usage, o.def)
 	} else {
-		return opt.usage
+		return o.usage
 	}
 }
 
-func (opt *boolOption) Set(fs *flag.FlagSet) {
-	if opt.value == nil {
-		opt.value = fs.Bool(opt.name, opt.def, opt.usage)
+func (o *boolOption) Set(fs *flag.FlagSet) {
+	if o.value == nil {
+		o.value = fs.Bool(o.name, o.def, o.usage)
 	}
 }
 
-func (opt *boolOption) Get() typex.Value {
-	if value := opt.value; value != nil {
+func (o *boolOption) Get() typex.Value {
+	if value := o.value; value != nil {
 		return typex.BoolValue(*value)
 	}
 	return typex.ZeroValue()

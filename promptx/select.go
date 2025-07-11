@@ -12,9 +12,10 @@ type Option interface {
 	Inactive() string
 	Selected() string
 	Details() string
+	Search(string) bool
 }
 
-// Select 自定义选项
+// Select 自定义选择器
 func Select[OPT Option](label string, opts []OPT) (OPT, error) {
 	var opt OPT
 	if len(opts) == 0 {
@@ -31,7 +32,11 @@ func Select[OPT Option](label string, opts []OPT) (OPT, error) {
 			Selected: opt.Selected(),
 			Details:  opt.Details(),
 		},
-		Size: 10,
+		Size:              10,
+		StartInSearchMode: true,
+		Searcher: func(input string, i int) bool {
+			return opts[i].Search(input)
+		},
 	}
 	if index, _, err := prompt.Run(); err != nil {
 		return opt, err
@@ -40,43 +45,21 @@ func Select[OPT Option](label string, opts []OPT) (OPT, error) {
 	}
 }
 
-// SelectString 选择字符串
+// SelectString 字符串选择器
 func SelectString(label string, opts []string) (string, error) {
-	prompt := promptui.Select{
-		Label: label,
-		Items: opts,
-		Templates: &promptui.SelectTemplates{
-			Label:    "---------- {{ . | red }} ----------",
-			Active:   "* {{ . | cyan }}",
-			Inactive: " {{ . | white }}",
-			Selected: "* {{. | red | faint }}",
-		},
-		Size: 10,
+	var list []String
+	for _, opt := range opts {
+		list = append(list, String{Label: opt, Value: opt})
 	}
-	if index, _, err := prompt.Run(); err != nil {
+	if s, err := Select(label, list); err != nil {
 		return "", err
 	} else {
-		return opts[index], nil
+		return s.Value, nil
 	}
 }
 
-// SelectBool 选择布尔值
-func SelectBool(label string) (bool, error) {
-	opts := []string{"true", "false"}
-	prompt := promptui.Select{
-		Label: label,
-		Items: opts,
-		Templates: &promptui.SelectTemplates{
-			Label:    "---------- {{ . | red }} ----------",
-			Active:   "* {{ . | cyan }}",
-			Inactive: " {{ . | white }}",
-			Selected: "* {{. | red | faint }}",
-		},
-		Size: 2,
-	}
-	if index, _, err := prompt.Run(); err != nil {
-		return false, err
-	} else {
-		return opts[index] == "true", nil
-	}
+// SelectBool 布尔选择器
+func SelectBool(label string) bool {
+	s, _ := SelectString(label, []string{"TRUE", "FALSE"})
+	return s == "TRUE"
 }

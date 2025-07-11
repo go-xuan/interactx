@@ -22,26 +22,26 @@ type int64Option struct {
 	def   int64
 }
 
-func (opt *int64Option) Name() string {
-	return opt.name
+func (o *int64Option) Name() string {
+	return o.baseOption.Name()
 }
 
-func (opt *int64Option) Usage() string {
-	if opt.def != 0 {
-		return genUsage(opt.usage, opt.def)
+func (o *int64Option) Usage() string {
+	if o.def != 0 {
+		return genUsage(o.usage, o.def)
 	} else {
-		return opt.usage
+		return o.usage
 	}
 }
 
-func (opt *int64Option) Set(fs *flag.FlagSet) {
-	if opt.value == nil {
-		opt.value = fs.Int64(opt.name, opt.def, opt.usage)
+func (o *int64Option) Set(fs *flag.FlagSet) {
+	if o.value == nil {
+		o.value = fs.Int64(o.name, o.def, o.usage)
 	}
 }
 
-func (opt *int64Option) Get() typex.Value {
-	if value := opt.value; value != nil {
+func (o *int64Option) Get() typex.Value {
+	if value := o.value; value != nil {
 		return typex.Int64Value(*value)
 	}
 	return typex.ZeroValue()

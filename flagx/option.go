@@ -3,7 +3,7 @@ package flagx
 import (
 	"flag"
 	"fmt"
-	
+
 	"github.com/go-xuan/typex"
 )
 
@@ -14,10 +14,12 @@ type Option interface {
 	Get() typex.Value
 }
 
+type OptionHandler func(*baseOption)
+
 // baseOption 基础选项
 type baseOption struct {
-	name  string
-	usage string
+	name  string // 选项名
+	usage string // 选项用法
 }
 
 func (opt *baseOption) Name() string {
