@@ -1,4 +1,4 @@
-package flagx
+package optionx
 
 import (
 	"flag"
@@ -6,7 +6,7 @@ import (
 	"github.com/go-xuan/typex"
 )
 
-func Int64Option(name, usage string, def int64) Option {
+func Int64(name, usage string, def int64) Option {
 	return &int64Option{
 		baseOption: baseOption{
 			name:  name,

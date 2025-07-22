@@ -1,4 +1,4 @@
-package flagx
+package optionx
 
 import (
 	"flag"
@@ -6,7 +6,7 @@ import (
 	"github.com/go-xuan/typex"
 )
 
-func StringOption(name, usage string, def string) Option {
+func String(name, usage string, def string) Option {
 	return &stringOption{
 		baseOption: baseOption{
 			name:  name,

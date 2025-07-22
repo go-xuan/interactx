@@ -1,4 +1,4 @@
-package flagx
+package optionx
 
 import (
 	"flag"
@@ -6,7 +6,7 @@ import (
 	"github.com/go-xuan/typex"
 )
 
-func BoolOption(name, usage string, def bool) Option {
+func Bool(name, usage string, def bool) Option {
 	return &boolOption{
 		baseOption: baseOption{
 			name:  name,

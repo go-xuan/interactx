@@ -1,4 +1,4 @@
-package flagx
+package optionx
 
 import (
 	"flag"
@@ -6,7 +6,7 @@ import (
 	"github.com/go-xuan/typex"
 )
 
-func FloatOption(name, usage string, def float64) Option {
+func Float(name, usage string, def float64) Option {
 	return &floatOption{
 		baseOption: baseOption{
 			name:  name,

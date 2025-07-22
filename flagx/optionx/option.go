@@ -1,4 +1,4 @@
-package flagx
+package optionx
 
 import (
 	"flag"

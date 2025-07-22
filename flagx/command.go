@@ -4,6 +4,7 @@ import (
 	"errors"
 	"flag"
 	"fmt"
+	"github.com/go-xuan/interactx/flagx/optionx"
 	"os"
 	"strings"
 
@@ -21,7 +22,7 @@ func NewCommand(name, usage string) *Command {
 		name:      name,
 		usage:     usage,
 		options:   []string{},
-		optionMap: make(map[string]Option),
+		optionMap: make(map[string]optionx.Option),
 		subs:      []string{},
 		subMap:    make(map[string]*Command),
 	}
@@ -52,17 +53,17 @@ func Execute(args ...string) error {
 }
 
 type Command struct {
-	name      string              // 命令名
-	usage     string              // 命令用法说明
-	parent    *Command            // 父命令
-	subs      []string            // 子命令名，有序
-	subMap    map[string]*Command // 子命令map
-	options   []string            // 选项名，有序
-	optionMap map[string]Option   // 选项map
-	fs        *flag.FlagSet       // FlagSet
-	args      []string            // 当前命令的执行参数
-	status    int                 // 状态（0:初始化/1:注册/2:执行）
-	executor  func() error        // 命令执行器
+	name      string                    // 命令名
+	usage     string                    // 命令用法说明
+	parent    *Command                  // 父命令
+	subs      []string                  // 子命令名，有序
+	subMap    map[string]*Command       // 子命令map
+	options   []string                  // 选项名，有序
+	optionMap map[string]optionx.Option // 选项map
+	fs        *flag.FlagSet             // FlagSet
+	args      []string                  // 当前命令的执行参数
+	status    int                       // 状态（0:初始化/1:注册/2:执行）
+	executor  func() error              // 命令执行器
 }
 
 // Join 添加父命令
@@ -75,7 +76,7 @@ func (c *Command) Join(command *Command) *Command {
 }
 
 // AddOption 添加参数
-func (c *Command) AddOption(options ...Option) *Command {
+func (c *Command) AddOption(options ...optionx.Option) *Command {
 	for _, option := range options {
 		if name := option.Name(); name != "" {
 			if _, ok := c.optionMap[name]; !ok {
@@ -220,7 +221,7 @@ func (c *Command) GetArg(index int) string {
 
 func (c *Command) addDefaultOption() {
 	c.AddOption(
-		BoolOption("h", "帮助说明", false),
+		optionx.Bool("h", "帮助说明", false),
 	)
 }
 

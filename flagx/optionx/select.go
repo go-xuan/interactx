@@ -1,4 +1,4 @@
-package flagx
+package optionx
 
 import (
 	"flag"
@@ -9,7 +9,7 @@ import (
 	"github.com/go-xuan/interactx/promptx"
 )
 
-func SelectOption(name, usage string, opts []promptx.String) Option {
+func Select(name, usage string, opts []promptx.String) Option {
 	return &selectOption{
 		baseOption: baseOption{
 			name:  name,
