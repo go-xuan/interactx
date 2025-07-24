@@ -15,14 +15,9 @@ type Option interface {
 	Search(string) bool
 }
 
-// Select 自定义选择器
-func Select[OPT Option](label string, opts []OPT) (OPT, error) {
-	var opt OPT
-	if len(opts) == 0 {
-		return opt, errors.New("opts is empty")
-	}
-	opt = opts[0]
-	prompt := promptui.Select{
+func getSelector[OPT Option](label string, opts []OPT) *promptui.Select {
+	opt := opts[0]
+	return &promptui.Select{
 		Label: label,
 		Items: opts,
 		Templates: &promptui.SelectTemplates{
@@ -38,10 +33,27 @@ func Select[OPT Option](label string, opts []OPT) (OPT, error) {
 			return opts[i].Search(input)
 		},
 	}
-	if index, _, err := prompt.Run(); err != nil {
+}
+
+// Select 选择器
+func Select[OPT Option](label string, opts []OPT) (OPT, error) {
+	var opt OPT
+	if len(opts) == 0 {
+		return opt, errors.New("opts is empty")
+	}
+	if index, _, err := getSelector(label, opts).Run(); err != nil {
 		return opt, err
 	} else {
 		return opts[index], nil
+	}
+}
+
+// SelectMust 选择器
+func SelectMust[OPT Option](label string, opts []OPT) OPT {
+	if index, _, err := getSelector(label, opts).Run(); err != nil {
+		return opts[0]
+	} else {
+		return opts[index]
 	}
 }
 

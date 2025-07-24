@@ -7,7 +7,7 @@ import (
 	"github.com/manifoldco/promptui"
 )
 
-// Input 获取用户输入的自定义命令
+// Input 获取用户输入
 func Input(label string) typex.Value {
 	prompt := promptui.Prompt{Label: label}
 	input, err := prompt.Run()
@@ -19,7 +19,17 @@ func Input(label string) typex.Value {
 	}
 }
 
-// InputValidate 带验证的输入
+// InputMust 获取用户输入
+func InputMust(label string) typex.Value {
+	prompt := promptui.Prompt{Label: label}
+	input, err := prompt.Run()
+	for strings.TrimSpace(input) == "" || err != nil {
+		input, err = prompt.Run()
+	}
+	return typex.StringValue(input)
+}
+
+// InputValidate 获取用户输入（自定义验证）
 func InputValidate(label string, validate func(string) error) typex.Value {
 	prompt := promptui.Prompt{
 		Label:    label,
