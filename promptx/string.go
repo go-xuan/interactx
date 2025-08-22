@@ -8,25 +8,25 @@ type String struct {
 	Value string // 选项值
 }
 
-func (String) Active() string {
+func (String) ActiveTemplate() string {
 	return "* {{ .Label | cyan }} "
 }
 
-func (String) Inactive() string {
+func (String) InactiveTemplate() string {
 	return " {{ .Label | white }}"
 }
 
-func (String) Selected() string {
+func (String) SelectedTemplate() string {
 	return "* {{ .Label | red | faint }}"
 }
 
-func (String) Details() string {
+func (String) DetailsTemplate() string {
 	return `
 --------- {{ "VALUE" | faint }} ----------
 {{ .Value }}`
 }
 
-func (s String) Search(input string) bool {
+func (s String) SearchMatch(input string) bool {
 	if strings.Contains(s.Label, input) {
 		return true
 	}

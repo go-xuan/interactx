@@ -4,13 +4,13 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-	"github.com/go-xuan/interactx/flagx/optionx"
 	"os"
 	"strings"
 
 	"github.com/go-xuan/typex"
-
+	
 	"github.com/go-xuan/interactx/colorx"
+	"github.com/go-xuan/interactx/flagx/optionx"
 )
 
 // Main 根命令
@@ -78,7 +78,7 @@ func (c *Command) Join(command *Command) *Command {
 // AddOption 添加参数
 func (c *Command) AddOption(options ...optionx.Option) *Command {
 	for _, option := range options {
-		if name := option.Name(); name != "" {
+		if name := option.GetName(); name != "" {
 			if _, ok := c.optionMap[name]; !ok {
 				c.options = append(c.options, name)
 			}
@@ -173,7 +173,7 @@ func (c *Command) ParseArgs() error {
 	fs := c.FlagSet()
 	// 绑定参数到FlagSet
 	for _, option := range c.optionMap {
-		option.Set(fs)
+		option.SetFS(fs)
 	}
 	// 解析FlagSet
 	if err := fs.Parse(c.args); err != nil {
@@ -185,7 +185,7 @@ func (c *Command) ParseArgs() error {
 // GetOptionValue 获取参数值
 func (c *Command) GetOptionValue(name string) typex.Value {
 	if option, ok := c.optionMap[name]; ok {
-		if value := option.Get(); value != nil {
+		if value := option.GetValue(); value != nil {
 			if value.String() == "-h" {
 				_ = c.FlagSet().Set("h", "true")
 			} else {
@@ -204,14 +204,17 @@ func (c *Command) FlagSet() *flag.FlagSet {
 	return c.fs
 }
 
+// NeedHelp 是否需要帮助
 func (c *Command) NeedHelp() bool {
 	return c.GetOptionValue("h").Bool()
 }
 
+// GetArgs 获取所有命令参数
 func (c *Command) GetArgs() []string {
 	return c.args
 }
 
+// GetArg 获取命令参数
 func (c *Command) GetArg(index int) string {
 	if index >= 0 && index < len(c.args) {
 		return c.args[index]
@@ -219,6 +222,7 @@ func (c *Command) GetArg(index int) string {
 	return ""
 }
 
+// 添加默认选项
 func (c *Command) addDefaultOption() {
 	c.AddOption(
 		optionx.Bool("h", "帮助说明", false),
@@ -245,6 +249,6 @@ func (c *Command) PrintOptions() {
 	fmt.Printf("[%s]命令选项：\n", colorx.Cyan(c.name))
 	for _, optName := range c.options {
 		option := c.optionMap[optName]
-		fmt.Printf("%-50s %s\n", colorx.Magenta("-"+option.Name()), option.Usage())
+		fmt.Printf("%-50s %s\n", colorx.Magenta("-"+option.GetName()), option.GetUsage())
 	}
 }

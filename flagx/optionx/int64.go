@@ -22,25 +22,21 @@ type int64Option struct {
 	def   int64
 }
 
-func (o *int64Option) Name() string {
-	return o.baseOption.Name()
-}
-
-func (o *int64Option) Usage() string {
+func (o *int64Option) GetUsage() string {
 	if o.def != 0 {
-		return genUsage(o.usage, o.def)
+		return o.getUsage(o.def)
 	} else {
 		return o.usage
 	}
 }
 
-func (o *int64Option) Set(fs *flag.FlagSet) {
+func (o *int64Option) SetFS(fs *flag.FlagSet) {
 	if o.value == nil {
 		o.value = fs.Int64(o.name, o.def, o.usage)
 	}
 }
 
-func (o *int64Option) Get() typex.Value {
+func (o *int64Option) GetValue() typex.Value {
 	if value := o.value; value != nil {
 		return typex.Int64Value(*value)
 	}

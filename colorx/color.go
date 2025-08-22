@@ -15,8 +15,8 @@ const (
 	grey                      // 灰色
 )
 
-// Dye 染色
-func Dye(c Color, v any) string {
+// Dyeing 染色
+func Dyeing(c Color, v any) string {
 	if black <= c && c <= grey {
 		return fmt.Sprintf("\x1b[%dm%v\x1b[0m", uint8(c), v)
 	}
@@ -24,33 +24,33 @@ func Dye(c Color, v any) string {
 }
 
 func Black(v any) string {
-	return Dye(black, v)
+	return Dyeing(black, v)
 }
 
 func Red(v any) string {
-	return Dye(red, v)
+	return Dyeing(red, v)
 }
 
 func Green(v any) string {
-	return Dye(green, v)
+	return Dyeing(green, v)
 }
 
 func Yellow(v any) string {
-	return Dye(yellow, v)
+	return Dyeing(yellow, v)
 }
 
 func Blue(v any) string {
-	return Dye(blue, v)
+	return Dyeing(blue, v)
 }
 
 func Magenta(v any) string {
-	return Dye(magenta, v)
+	return Dyeing(magenta, v)
 }
 
 func Cyan(v any) string {
-	return Dye(cyan, v)
+	return Dyeing(cyan, v)
 }
 
 func Grey(v any) string {
-	return Dye(grey, v)
+	return Dyeing(grey, v)
 }

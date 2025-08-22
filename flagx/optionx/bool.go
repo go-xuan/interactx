@@ -22,25 +22,21 @@ type boolOption struct {
 	def   bool
 }
 
-func (o *boolOption) Name() string {
-	return o.baseOption.Name()
-}
-
-func (o *boolOption) Usage() string {
+func (o *boolOption) GetUsage() string {
 	if o.def {
-		return genUsage(o.usage, o.def)
+		return o.getUsage(o.def)
 	} else {
 		return o.usage
 	}
 }
 
-func (o *boolOption) Set(fs *flag.FlagSet) {
+func (o *boolOption) SetFS(fs *flag.FlagSet) {
 	if o.value == nil {
 		o.value = fs.Bool(o.name, o.def, o.usage)
 	}
 }
 
-func (o *boolOption) Get() typex.Value {
+func (o *boolOption) GetValue() typex.Value {
 	if value := o.value; value != nil {
 		return typex.BoolValue(*value)
 	}

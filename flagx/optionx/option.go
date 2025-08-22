@@ -8,10 +8,10 @@ import (
 )
 
 type Option interface {
-	Name() string
-	Usage() string
-	Set(fs *flag.FlagSet)
-	Get() typex.Value
+	GetName() string        // 获取选项名
+	GetUsage() string       // 获取选项用法
+	SetFS(fs *flag.FlagSet) // 设置选项值
+	GetValue() typex.Value  // 获取选项值
 }
 
 type OptionHandler func(*baseOption)
@@ -22,11 +22,12 @@ type baseOption struct {
 	usage string // 选项用法
 }
 
-func (opt *baseOption) Name() string {
-	return opt.name
+// GetName 获取选项名
+func (o *baseOption) GetName() string {
+	return o.name
 }
 
-// 通用的 Usage 方法生成逻辑
-func genUsage(usage string, def interface{}) string {
-	return fmt.Sprintf("%s | default: %v", usage, def)
+// 生成选项用法
+func (o *baseOption) getUsage(def interface{}) string {
+	return fmt.Sprintf("%s | default: %v", o.usage, def)
 }

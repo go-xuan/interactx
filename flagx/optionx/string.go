@@ -22,25 +22,21 @@ type stringOption struct {
 	def   string
 }
 
-func (o *stringOption) Name() string {
-	return o.baseOption.Name()
-}
-
-func (o *stringOption) Usage() string {
+func (o *stringOption) GetUsage() string {
 	if o.def != "" {
-		return genUsage(o.usage, o.def)
+		return o.getUsage(o.def)
 	} else {
 		return o.usage
 	}
 }
 
-func (o *stringOption) Set(fs *flag.FlagSet) {
+func (o *stringOption) SetFS(fs *flag.FlagSet) {
 	if o.value == nil {
 		o.value = fs.String(o.name, o.def, o.usage)
 	}
 }
 
-func (o *stringOption) Get() typex.Value {
+func (o *stringOption) GetValue() typex.Value {
 	if value := o.value; value != nil {
 		return typex.StringValue(*value)
 	}

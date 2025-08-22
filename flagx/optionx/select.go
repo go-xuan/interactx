@@ -24,11 +24,7 @@ type selectOption struct {
 	opts []promptx.String
 }
 
-func (o *selectOption) Name() string {
-	return o.baseOption.Name()
-}
-
-func (o *selectOption) Usage() string {
+func (o *selectOption) GetUsage() string {
 	def := strings.Builder{}
 	for i, opt := range o.opts {
 		if i > 0 {
@@ -36,14 +32,14 @@ func (o *selectOption) Usage() string {
 		}
 		def.WriteString(opt.Value)
 	}
-	return genUsage(o.usage, def.String())
+	return o.getUsage(def.String())
 }
 
-func (o *selectOption) Set(*flag.FlagSet) {
+func (o *selectOption) SetFS(*flag.FlagSet) {
 	return
 }
 
-func (o *selectOption) Get() typex.Value {
+func (o *selectOption) GetValue() typex.Value {
 	if s, err := promptx.Select(o.usage, o.opts); err == nil {
 		return typex.StringValue(s.Value)
 	}

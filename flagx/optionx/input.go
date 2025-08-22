@@ -21,18 +21,14 @@ type inputOption struct {
 	baseOption
 }
 
-func (o *inputOption) Name() string {
-	return o.baseOption.Name()
-}
-
-func (o *inputOption) Usage() string {
+func (o *inputOption) GetUsage() string {
 	return o.usage
 }
 
-func (o *inputOption) Set(*flag.FlagSet) {
+func (o *inputOption) SetFS(*flag.FlagSet) {
 	return
 }
 
-func (o *inputOption) Get() typex.Value {
+func (o *inputOption) GetValue() typex.Value {
 	return promptx.Input(o.usage)
 }

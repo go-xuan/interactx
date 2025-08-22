@@ -22,25 +22,21 @@ type floatOption struct {
 	def   float64
 }
 
-func (o *floatOption) Name() string {
-	return o.baseOption.Name()
-}
-
-func (o *floatOption) Usage() string {
+func (o *floatOption) GetUsage() string {
 	if o.def != float64(0) {
-		return genUsage(o.usage, o.def)
+		return o.getUsage(o.def)
 	} else {
 		return o.usage
 	}
 }
 
-func (o *floatOption) Set(fs *flag.FlagSet) {
+func (o *floatOption) SetFS(fs *flag.FlagSet) {
 	if o.value == nil {
 		o.value = fs.Float64(o.name, o.def, o.usage)
 	}
 }
 
-func (o *floatOption) Get() typex.Value {
+func (o *floatOption) GetValue() typex.Value {
 	if value := o.value; value != nil {
 		return typex.Float64Value(*value)
 	}

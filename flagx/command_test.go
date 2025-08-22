@@ -2,8 +2,9 @@ package flagx
 
 import (
 	"fmt"
-	"github.com/go-xuan/interactx/flagx/optionx"
 	"testing"
+
+	"github.com/go-xuan/interactx/flagx/optionx"
 )
 
 func TestCommand(t *testing.T) {

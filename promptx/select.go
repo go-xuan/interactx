@@ -8,11 +8,11 @@ import (
 
 // Option 选项
 type Option interface {
-	Active() string
-	Inactive() string
-	Selected() string
-	Details() string
-	Search(string) bool
+	ActiveTemplate() string   // 当前选择项模板
+	InactiveTemplate() string // 其他待选项模板
+	SelectedTemplate() string // 已选项模板
+	DetailsTemplate() string  // 详情模板
+	SearchMatch(string) bool  // 搜索匹配
 }
 
 func getSelector[OPT Option](label string, opts []OPT) *promptui.Select {
@@ -22,15 +22,15 @@ func getSelector[OPT Option](label string, opts []OPT) *promptui.Select {
 		Items: opts,
 		Templates: &promptui.SelectTemplates{
 			Label:    "---------- {{ . | red }} ----------",
-			Active:   opt.Active(),
-			Inactive: opt.Inactive(),
-			Selected: opt.Selected(),
-			Details:  opt.Details(),
+			Active:   opt.ActiveTemplate(),
+			Inactive: opt.InactiveTemplate(),
+			Selected: opt.SelectedTemplate(),
+			Details:  opt.DetailsTemplate(),
 		},
 		Size:              10,
 		StartInSearchMode: true,
 		Searcher: func(input string, i int) bool {
-			return opts[i].Search(input)
+			return opts[i].SearchMatch(input)
 		},
 	}
 }
