@@ -3,7 +3,7 @@ module github.com/go-xuan/interactx
 go 1.18
 
 require (
-	github.com/go-xuan/typex v1.25.2
+	github.com/go-xuan/typex v1.25.3
 	github.com/manifoldco/promptui v0.9.0
 )
 
