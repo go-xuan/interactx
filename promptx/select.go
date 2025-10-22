@@ -15,26 +15,6 @@ type Option interface {
 	SearchMatch(string) bool  // 搜索匹配
 }
 
-func getSelector[OPT Option](label string, opts []OPT) *promptui.Select {
-	opt := opts[0]
-	return &promptui.Select{
-		Label: label,
-		Items: opts,
-		Templates: &promptui.SelectTemplates{
-			Label:    "---------- {{ . | red }} ----------",
-			Active:   opt.ActiveTemplate(),
-			Inactive: opt.InactiveTemplate(),
-			Selected: opt.SelectedTemplate(),
-			Details:  opt.DetailsTemplate(),
-		},
-		Size:              10,
-		StartInSearchMode: true,
-		Searcher: func(input string, i int) bool {
-			return opts[i].SearchMatch(input)
-		},
-	}
-}
-
 // Select 选择器
 func Select[OPT Option](label string, opts []OPT) (OPT, error) {
 	var opt OPT
@@ -57,21 +37,22 @@ func SelectMust[OPT Option](label string, opts []OPT) OPT {
 	}
 }
 
-// SelectString 字符串选择器
-func SelectString(label string, opts []string) (string, error) {
-	var list []String
-	for _, opt := range opts {
-		list = append(list, String{Label: opt, Value: opt})
+func getSelector[OPT Option](label string, opts []OPT) *promptui.Select {
+	opt := opts[0]
+	return &promptui.Select{
+		Label: label,
+		Items: opts,
+		Templates: &promptui.SelectTemplates{
+			Label:    "---------- {{ . | red }} ----------",
+			Active:   opt.ActiveTemplate(),
+			Inactive: opt.InactiveTemplate(),
+			Selected: opt.SelectedTemplate(),
+			Details:  opt.DetailsTemplate(),
+		},
+		Size:              10,
+		StartInSearchMode: true,
+		Searcher: func(input string, i int) bool {
+			return opts[i].SearchMatch(input)
+		},
 	}
-	if s, err := Select(label, list); err != nil {
-		return "", err
-	} else {
-		return s.Value, nil
-	}
-}
-
-// SelectBool 布尔选择器
-func SelectBool(label string) bool {
-	s, _ := SelectString(label, []string{"TRUE", "FALSE"})
-	return s == "TRUE"
 }
