@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	"github.com/go-xuan/typex"
-	
+
 	"github.com/go-xuan/interactx/colorx"
 	"github.com/go-xuan/interactx/flagx/optionx"
 )
@@ -32,8 +32,10 @@ func NewCommand(name, usage string) *Command {
 func Register(commands ...*Command) {
 	Main.Register()
 	for _, command := range commands {
-		command.Join(Main)
-		command.Register()
+		if command.IsAvailable() {
+			command.Join(Main)
+			command.Register()
+		}
 	}
 }
 
@@ -55,6 +57,7 @@ func Execute(args ...string) error {
 type Command struct {
 	name      string                    // 命令名
 	usage     string                    // 命令用法说明
+	executor  func() error              // 命令执行器
 	parent    *Command                  // 父命令
 	subs      []string                  // 子命令名，有序
 	subMap    map[string]*Command       // 子命令map
@@ -63,7 +66,11 @@ type Command struct {
 	fs        *flag.FlagSet             // FlagSet
 	args      []string                  // 当前命令的执行参数
 	status    int                       // 状态（0:初始化/1:注册/2:执行）
-	executor  func() error              // 命令执行器
+}
+
+// IsAvailable 校验命令是否可用
+func (c *Command) IsAvailable() bool {
+	return c.name != "" && c.executor != nil
 }
 
 // Join 添加父命令
