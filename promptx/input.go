@@ -24,21 +24,22 @@ func Input(label string) typex.Value {
 	if value := input(promptui.Prompt{
 		Label: label,
 	}); value == "" {
-		return typex.ZeroValue()
+		return typex.NewZero()
 	} else {
-		return typex.StringValue(value)
+		return typex.NewString(value)
 	}
 }
 
 // InputDefault 获取用户输入, 可以默认值
 func InputDefault(label string, def string) typex.Value {
 	if value := input(promptui.Prompt{
-		Label:   label,
-		Default: def,
+		Label:     label,
+		Default:   def,
+		AllowEdit: true,
 	}); value == "" {
-		return typex.StringValue(def)
+		return typex.NewString(def)
 	} else {
-		return typex.StringValue(value)
+		return typex.NewString(value)
 	}
 }
 
@@ -47,5 +48,15 @@ func InputMust(label string) typex.Value {
 	value := input(promptui.Prompt{
 		Label: label,
 	}, true)
-	return typex.StringValue(value)
+	return typex.NewString(value)
+}
+
+// InputAndDo 根据用户输入执行函数, 直到输入为空
+func InputAndDo(label string, do func(string) error) error {
+	for text := Input(label).String(); text != ""; text = Input(label).String() {
+		if err := do(text); err != nil {
+			return err
+		}
+	}
+	return nil
 }

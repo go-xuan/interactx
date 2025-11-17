@@ -37,7 +37,7 @@ func (o *intOption) SetFS(fs *flag.FlagSet) {
 }
 func (o *intOption) GetValue() typex.Value {
 	if value := o.value; value != nil {
-		return typex.IntValue(*value)
+		return typex.NewInt(*value)
 	}
-	return typex.ZeroValue()
+	return typex.NewZero()
 }

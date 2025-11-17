@@ -37,6 +37,7 @@ func SelectMust[OPT Option](label string, opts []OPT) OPT {
 	}
 }
 
+// 获取选择器
 func getSelector[OPT Option](label string, opts []OPT) *promptui.Select {
 	opt := opts[0]
 	return &promptui.Select{

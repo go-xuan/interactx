@@ -41,7 +41,7 @@ func (o *selectOption) SetFS(*flag.FlagSet) {
 
 func (o *selectOption) GetValue() typex.Value {
 	if s, err := promptx.Select(o.usage, o.opts); err == nil {
-		return typex.StringValue(s.Value)
+		return typex.NewString(s.Value)
 	}
-	return typex.ZeroValue()
+	return typex.NewZero()
 }

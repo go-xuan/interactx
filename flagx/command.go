@@ -127,7 +127,6 @@ func (c *Command) Register() {
 	c.addDefaultOption()
 }
 
-// Execute 执行命令
 func (c *Command) Execute() error {
 	if c.status == 0 {
 		return errors.New("请先注册命令")
@@ -156,6 +155,7 @@ func (c *Command) execute() error {
 	}
 	if executor := c.executor; executor != nil {
 		fmt.Printf("======当前执行命令:[%s]======\n", name)
+		c.CheckHelp()
 		if err := executor(); err != nil {
 			return err
 		}
@@ -168,9 +168,10 @@ func (c *Command) execute() error {
 	return nil
 }
 
+// Name 获取命令名（包含父命令）
 func (c *Command) Name() string {
 	if c.parent != nil {
-		return c.parent.Name() + "." + c.name
+		return c.parent.Name() + ":" + c.name
 	}
 	return c.name
 }
@@ -200,7 +201,7 @@ func (c *Command) GetOptionValue(name string) typex.Value {
 			}
 		}
 	}
-	return typex.ZeroValue()
+	return typex.NewZero()
 }
 
 // FlagSet 初始化FlagSet并将参数注册到FlagSet
@@ -214,6 +215,14 @@ func (c *Command) FlagSet() *flag.FlagSet {
 // NeedHelp 是否需要帮助
 func (c *Command) NeedHelp() bool {
 	return c.GetOptionValue("h").Bool()
+}
+
+// CheckHelp 检查是否需要帮助
+func (c *Command) CheckHelp() {
+	if c.NeedHelp() {
+		c.PrintOptions()
+		os.Exit(0)
+	}
 }
 
 // GetArgs 获取所有命令参数

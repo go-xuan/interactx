@@ -38,7 +38,7 @@ func (o *boolOption) SetFS(fs *flag.FlagSet) {
 
 func (o *boolOption) GetValue() typex.Value {
 	if value := o.value; value != nil {
-		return typex.BoolValue(*value)
+		return typex.NewBool(*value)
 	}
-	return typex.ZeroValue()
+	return typex.NewZero()
 }

@@ -12,17 +12,17 @@ func TestCommand(t *testing.T) {
 	command.AddOption(
 		optionx.Int("size", "数量", 0),
 	)
-	command.SetExecutor(
-		func() error {
-			command.NeedHelp()
-			size := command.GetOptionValue("size")
-			fmt.Println("size = ", size.Int(1))
-			return nil
-		},
-	)
+	command.SetExecutor(func() error {
+		size := command.GetOptionValue("size")
+		fmt.Println("size = ", size.Int(1))
+		return nil
+	})
 
 	// 注册命令
-	if err := Execute(); err != nil {
+	Register(command)
+
+	// 执行命令
+	if err := Execute("test", "-size", "88"); err != nil {
 		fmt.Println(err)
 	}
 }

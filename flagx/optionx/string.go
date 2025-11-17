@@ -38,7 +38,7 @@ func (o *stringOption) SetFS(fs *flag.FlagSet) {
 
 func (o *stringOption) GetValue() typex.Value {
 	if value := o.value; value != nil {
-		return typex.StringValue(*value)
+		return typex.NewString(*value)
 	}
-	return typex.ZeroValue()
+	return typex.NewZero()
 }
