@@ -23,11 +23,10 @@ func input(prompt promptui.Prompt, must ...bool) string {
 func Input(label string) typex.Value {
 	if value := input(promptui.Prompt{
 		Label: label,
-	}); value == "" {
-		return typex.NewZero()
-	} else {
+	}); value != "" {
 		return typex.NewString(value)
 	}
+	return typex.NewZero()
 }
 
 // InputDefault 获取用户输入, 可以默认值
@@ -36,11 +35,21 @@ func InputDefault(label string, def string) typex.Value {
 		Label:     label,
 		Default:   def,
 		AllowEdit: true,
-	}); value == "" {
-		return typex.NewString(def)
-	} else {
+	}); value != "" {
 		return typex.NewString(value)
 	}
+	return typex.NewString(def)
+}
+
+// InputValidate 获取用户输入, 并校验输入
+func InputValidate(label string, Validate func(string) error) typex.Value {
+	if value := input(promptui.Prompt{
+		Label:    label,
+		Validate: Validate,
+	}); value != "" {
+		return typex.NewString(value)
+	}
+	return typex.NewZero()
 }
 
 // InputMust 获取用户输入

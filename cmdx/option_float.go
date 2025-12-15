@@ -1,4 +1,4 @@
-package optionx
+package cmdx
 
 import (
 	"flag"
@@ -25,9 +25,8 @@ type floatOption struct {
 func (o *floatOption) GetUsage() string {
 	if o.def != float64(0) {
 		return o.getUsage(o.def)
-	} else {
-		return o.usage
 	}
+	return o.usage
 }
 
 func (o *floatOption) SetFS(fs *flag.FlagSet) {

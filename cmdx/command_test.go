@@ -1,16 +1,14 @@
-package flagx
+package cmdx
 
 import (
 	"fmt"
 	"testing"
-
-	"github.com/go-xuan/interactx/flagx/optionx"
 )
 
 func TestCommand(t *testing.T) {
 	var command = NewCommand("test", "测试")
 	command.AddOption(
-		optionx.Int("size", "数量", 0),
+		Int("size", "数量", 0),
 	)
 	command.SetExecutor(func() error {
 		size := command.GetOptionValue("size")

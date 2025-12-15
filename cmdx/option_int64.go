@@ -1,4 +1,4 @@
-package optionx
+package cmdx
 
 import (
 	"flag"
@@ -25,9 +25,8 @@ type int64Option struct {
 func (o *int64Option) GetUsage() string {
 	if o.def != 0 {
 		return o.getUsage(o.def)
-	} else {
-		return o.usage
 	}
+	return o.usage
 }
 
 func (o *int64Option) SetFS(fs *flag.FlagSet) {

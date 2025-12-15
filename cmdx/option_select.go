@@ -1,4 +1,4 @@
-package optionx
+package cmdx
 
 import (
 	"flag"

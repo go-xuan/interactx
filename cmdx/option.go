@@ -1,4 +1,4 @@
-package optionx
+package cmdx
 
 import (
 	"flag"
@@ -13,8 +13,6 @@ type Option interface {
 	SetFS(fs *flag.FlagSet) // 设置选项值
 	GetValue() typex.Value  // 获取选项值
 }
-
-type OptionHandler func(*baseOption)
 
 // baseOption 基础选项
 type baseOption struct {

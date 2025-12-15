@@ -1,4 +1,4 @@
-package flagx
+package cmdx
 
 import (
 	"errors"
@@ -7,10 +7,10 @@ import (
 	"os"
 	"strings"
 
+	"github.com/go-xuan/interactx/alignx"
 	"github.com/go-xuan/typex"
 
 	"github.com/go-xuan/interactx/colorx"
-	"github.com/go-xuan/interactx/flagx/optionx"
 )
 
 // Main 根命令
@@ -22,7 +22,7 @@ func NewCommand(name, usage string) *Command {
 		name:      name,
 		usage:     usage,
 		options:   []string{},
-		optionMap: make(map[string]optionx.Option),
+		optionMap: make(map[string]Option),
 		subs:      []string{},
 		subMap:    make(map[string]*Command),
 	}
@@ -55,17 +55,17 @@ func Execute(args ...string) error {
 }
 
 type Command struct {
-	name      string                    // 命令名
-	usage     string                    // 命令用法说明
-	executor  func() error              // 命令执行器
-	parent    *Command                  // 父命令
-	subs      []string                  // 子命令名，有序
-	subMap    map[string]*Command       // 子命令map
-	options   []string                  // 选项名，有序
-	optionMap map[string]optionx.Option // 选项map
-	fs        *flag.FlagSet             // FlagSet
-	args      []string                  // 当前命令的执行参数
-	status    int                       // 状态（0:初始化/1:注册/2:执行）
+	name      string              // 命令名
+	usage     string              // 命令用法说明
+	executor  func() error        // 命令执行器
+	parent    *Command            // 父命令
+	subs      []string            // 子命令名，有序
+	subMap    map[string]*Command // 子命令map
+	options   []string            // 选项名，有序
+	optionMap map[string]Option   // 选项map
+	fs        *flag.FlagSet       // FlagSet
+	args      []string            // 当前命令的执行参数
+	status    int                 // 状态（0:初始化/1:注册/2:执行）
 }
 
 // IsAvailable 校验命令是否可用
@@ -83,7 +83,7 @@ func (c *Command) Join(command *Command) *Command {
 }
 
 // AddOption 添加参数
-func (c *Command) AddOption(options ...optionx.Option) *Command {
+func (c *Command) AddOption(options ...Option) *Command {
 	for _, option := range options {
 		if name := option.GetName(); name != "" {
 			if _, ok := c.optionMap[name]; !ok {
@@ -159,12 +159,13 @@ func (c *Command) execute() error {
 		if err := executor(); err != nil {
 			return err
 		}
-	} else if c.parent != nil {
-		return fmt.Errorf("子命令未设置执行器:[%s]", name)
-	} else {
-		c.PrintSubs()
+		c.status = 2
+		return nil
 	}
-	c.status = 2
+	if c.parent != nil {
+		return fmt.Errorf("子命令未设置执行器:[%s]", name)
+	}
+	c.PrintSubs()
 	return nil
 }
 
@@ -179,11 +180,11 @@ func (c *Command) Name() string {
 // ParseArgs 解析参数值到选项中
 func (c *Command) ParseArgs() error {
 	fs := c.FlagSet()
-	// 绑定参数到FlagSet
+	// bind options to FlagSet
 	for _, option := range c.optionMap {
 		option.SetFS(fs)
 	}
-	// 解析FlagSet
+	// Parse FlagSet
 	if err := fs.Parse(c.args); err != nil {
 		return errors.New("FlagSet解析失败：" + err.Error())
 	}
@@ -241,7 +242,7 @@ func (c *Command) GetArg(index int) string {
 // 添加默认选项
 func (c *Command) addDefaultOption() {
 	c.AddOption(
-		optionx.Bool("h", "帮助说明", false),
+		Bool("h", "帮助说明", false),
 	)
 }
 
@@ -251,9 +252,10 @@ func (c *Command) PrintSubs() {
 		return
 	}
 	fmt.Printf("[%s]子命令：\n", colorx.Cyan(c.name))
+	length := alignx.MaxLength(c.subs...)
 	for _, name := range c.subs {
 		sub := c.subMap[name]
-		fmt.Printf("%-50s %s\n", colorx.Magenta(name), sub.usage)
+		fmt.Println(colorx.Magenta(alignx.Left(name, length+1)), sub.usage)
 	}
 }
 
@@ -263,8 +265,9 @@ func (c *Command) PrintOptions() {
 		return
 	}
 	fmt.Printf("[%s]命令选项：\n", colorx.Cyan(c.name))
+	length := alignx.MaxLength(c.options...)
 	for _, optName := range c.options {
 		option := c.optionMap[optName]
-		fmt.Printf("%-50s %s\n", colorx.Magenta("-"+option.GetName()), option.GetUsage())
+		fmt.Println(colorx.Magenta(alignx.Left("-"+option.GetName(), length+1)), option.GetUsage())
 	}
 }
