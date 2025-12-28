@@ -2,17 +2,16 @@ package alignx
 
 import "unicode"
 
-// Left 左对齐
-func Left(s string, length int) string {
-	fill := Spaces(length - VisualLength(s))
-	return string(append([]rune(s), fill...))
-
-}
-
-// Right 右对齐
-func Right(s string, length int) string {
-	fill := Spaces(length - VisualLength(s))
-	return string(append(fill, []rune(s)...))
+// Align 对齐字符串
+func Align(s string, length int) string {
+	switch l := len(s); {
+	case length > 0 && length > l:
+		return s + Spaces(length-l)
+	case length < 0 && -length > l:
+		return Spaces(-length-l) + s
+	default:
+		return s
+	}
 }
 
 // VisualLength 计算字符串的可视化长度（1个中文占5/3个字符宽度）
@@ -31,16 +30,16 @@ func VisualLength(s string) int {
 }
 
 // Spaces 生成指定长度的空格字符串
-func Spaces(length int) []rune {
+func Spaces(length int) string {
 	var runes []rune
 	for i := 0; i < length; i++ {
 		runes = append(runes, 32) // 32为空格
 	}
-	return runes
+	return string(runes)
 }
 
 // MaxLength 计算字符串数组中最大的可视化长度
-func MaxLength(ss ...string) int {
+func MaxLength(ss []string) int {
 	var length int
 	for _, s := range ss {
 		if l := VisualLength(s); l > length {

@@ -9,9 +9,9 @@ func TestAlign(t *testing.T) {
 	}
 
 	for _, text := range texts {
-		println(Right(text, 15), "|")
+		println(Align(text, -15), "|")
 	}
 	for _, text := range texts {
-		println(Left(text, 15), "|")
+		println(Align(text, 15), "|")
 	}
 }

@@ -252,10 +252,10 @@ func (c *Command) PrintSubs() {
 		return
 	}
 	fmt.Printf("[%s]子命令：\n", colorx.Cyan(c.name))
-	length := alignx.MaxLength(c.subs...)
+	length := alignx.MaxLength(c.subs)
 	for _, name := range c.subs {
 		sub := c.subMap[name]
-		fmt.Println(colorx.Magenta(alignx.Left(name, length+1)), sub.usage)
+		fmt.Println(colorx.Magenta(alignx.Align(name, length+1)), sub.usage)
 	}
 }
 
@@ -265,9 +265,9 @@ func (c *Command) PrintOptions() {
 		return
 	}
 	fmt.Printf("[%s]命令选项：\n", colorx.Cyan(c.name))
-	length := alignx.MaxLength(c.options...)
+	length := alignx.MaxLength(c.options)
 	for _, optName := range c.options {
 		option := c.optionMap[optName]
-		fmt.Println(colorx.Magenta(alignx.Left("-"+option.GetName(), length+1)), option.GetUsage())
+		fmt.Println(colorx.Magenta(alignx.Align("-"+option.GetName(), length+1)), option.GetUsage())
 	}
 }
