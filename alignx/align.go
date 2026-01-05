@@ -4,13 +4,31 @@ import "unicode"
 
 // Align 对齐字符串
 func Align(s string, length int) string {
-	switch l := len(s); {
+	switch l := VisualLength(s); {
+	case l == 0:
+		return Spaces(length)
+	case length == 0:
+		return s
 	case length > 0 && length > l:
 		return s + Spaces(length-l)
 	case length < 0 && -length > l:
 		return Spaces(-length-l) + s
 	default:
-		return s
+		return Extract(s, length)
+	}
+}
+
+// Extract 截取
+func Extract(str string, length int) string {
+	runes := []rune(str)
+	l := len(runes)
+	switch {
+	case length == 0, length > l, length < -l:
+		return str
+	case length < 0:
+		return string(runes[l+length:])
+	default:
+		return string(runes[:length])
 	}
 }
 
